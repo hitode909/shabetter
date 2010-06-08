@@ -1,0 +1,9 @@
+east:
+  id: 1
+  name: east
+  description: east server
+
+west:
+  id: 2
+  name: west
+  description: west server

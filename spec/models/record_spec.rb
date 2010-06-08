@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 require File.dirname(__FILE__) + '/../spec_helper'
 require File.dirname(__FILE__) + '/../models_helper'
+require 'base64'
 
 describe Model::Record do
   include Model
@@ -21,25 +22,34 @@ describe Model::Record do
     @east_1.text.should == 'こんにちは'
   end
 
-  it 'has recorder' do
-    @east_1.recorder.should == @east
+#   it 'has recorder' do
+#     @east_1.recorder.should == @east
+#   end
+
+  it 'has get_binary_from_base64 method (internal)' do
+    message = 'こんにちは'
+    Model::Record.get_binary_from_base64('data:audio/wav;base64,' + Base64.encode64(message)).should == message
   end
 
-#   it 'has name' do
-#     @east.name.should == 'east'
-#   end
+  it 'will die when input is not base64 encoded' do
+    lambda{
+      @east_1.get_binary_from_base64('cool')
+    }.should raise_error
+  end
 
-#   it 'has description' do
-#     @east.description.should == 'east server'
-#   end
+  it 'has new_record method' do
+    message = 'おはようございます'
+    text = 'おはよう!!!!'
+    place = '滋賀'
+    record = Model::Record.new_record(
+      :data => 'data:audio/wav;base64,' + Base64.encode64(message),
+      :text => text,
+      :place => place
+      )
 
-#   it 'has path' do
-#     @east.path.should == '/recorder/east'
-#   end
-
-#   it 'has path with method' do
-#     @east.path('hello').should == '/recorder/east.hello'
-#   end
-
+    record.data.should == message
+    record.text.should == text
+    record.place.should == place
+  end
 
 end

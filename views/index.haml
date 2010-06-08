@@ -1,0 +1,34 @@
+%h2 最近の録音
+
+.records
+  - if @records.length > 0 
+    - @records.each do |rec|
+      .record
+        != rec.created_at
+        %br
+        != rec.text
+        @
+        != rec.place
+        %audio{ :src => rec.path , :controls => true}
+        %a{ :href => rec.path} どうぞ
+
+.howto
+  %h2 録音するには
+  %span /record にPOSTしてください．data=Base64エンコードしたwavファイル が必要です．text=読み仮名，place=録音した場所も合わせてPOSTするとよいです．
+
+
+.debug-post
+  %h2 デバッグ用に投稿する
+  %form{ :action => '/record', :method => 'post' }
+    %div
+      録音されたwavファイル(BASE64encoded)
+      %input{ :type => 'input', :name => 'data' }
+    %div
+      読み仮名
+      %input{ :type => 'text', :name => 'text' }
+    %div
+      録音した場所
+      %input{ :type => 'text', :name => 'place' }
+    %div
+      %input{ :type => 'submit', :value => '投稿' }
+    
